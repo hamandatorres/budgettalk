@@ -1,0 +1,43 @@
+import React, { Component } from 'react';
+import axios from 'axios';
+import Arena from './components/Arena'
+import './App.css';
+
+export default class App extends Component {
+  constructor() {
+    super();
+    this.state = {
+      cp : []
+    }
+    // this.moveCP = this.moveCP.bind(this);
+  }
+//   componentDidMount() {
+//     this.getCp();
+//     console.log(this.state.cp)
+//   }
+//   getCp = () => {
+//     axios.get('/api/councilperson')
+//   .then(response => {
+//       this.setState({ cp: response.data })
+//   })
+//   .catch(error => console.log(error))
+// }
+  // moveCp(cp){
+    //   axios.post(`http://localhost:3001/api/councilperson`, {cp: cp})
+  //   .then(response => {
+  //     this.setState({ cp: response.data})
+  //   })
+  //   .catch(error => console.log(error))
+  // }
+
+  render() {
+    // const { name, age } = this.state
+  return (
+    <div className="App">
+        {/* <Arena moveCP={this.moveCP} /> */}
+        <h1>"Hello"</h1>
+    </div>
+  )};
+  
+}
+
