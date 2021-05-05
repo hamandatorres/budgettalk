@@ -28,5 +28,5 @@ app.delete('/api/councilperson/:id', cp.deleteCp)
 // // app.delete('https://randomuser.me/api/?inc=name,dob', )
 
 
-const port = 3002
+const port = 4000
 app.listen(port, () => console.log(`Server running on ${port}`));

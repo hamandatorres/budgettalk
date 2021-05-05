@@ -1,0 +1,30 @@
+<!-- Development version -->
+<script src="https://unpkg.com/@popperjs/core@2/dist/umd/popper.js"></script>
+
+<!-- Production version -->
+<script src="https://unpkg.com/@popperjs/core@2"></script>
+<Dropdown>
+  <Dropdown.Toggle variant="success" id="dropdown-basic">
+    Dropdown Button
+  </Dropdown.Toggle>
+
+  <Dropdown.Menu>
+    <Dropdown.Item href="#/action-1">Action</Dropdown.Item>
+    <Dropdown.Item href="#/action-2">Another action</Dropdown.Item>
+    <Dropdown.Item href="#/action-3">Something else</Dropdown.Item>
+  </Dropdown.Menu>
+</Dropdown>
+
+
+
+
+import { createPopper } from '@popperjs/core';
+
+const button = document.querySelector('#button');
+const tooltip = document.querySelector('#tooltip');
+
+// Pass the button, the tooltip, and some options, and Popper will do the
+// magic positioning for you:
+createPopper(button, tooltip, {
+  placement: 'right',
+});

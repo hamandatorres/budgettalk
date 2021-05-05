@@ -1,13 +1,8 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react'
 import axios from 'axios'
 
 class Arena extends Component {
-  constructor() {
-    super();
-    this.state = {
-      arenaCp: []
-    }
-  } 
+
   // this.setState = ({ this.arenaCp: this.props.moveCP})
   componentDidMount() {
         this.getCp();
