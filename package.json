@@ -13,14 +13,16 @@
     "express": "^4.17.1",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
-    "react-scripts": "^0.9.5",
+    "react-scripts": "^5.0.1",
     "web-vitals": "^1.0.1"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "predeploy": "yarn build",
+    "deploy": "gh-pages -d build"
   },
   "eslintConfig": {
     "extends": [
@@ -55,5 +57,5 @@
   "bugs": {
     "url": "https://github.com/hamandatorres/budgettalk/issues"
   },
-  "homepage": "https://github.com/hamandatorres/budgettalk#readme"
+  "homepage": "https://hamandatorres.github.io/budgettalk"
 }
