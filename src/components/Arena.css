@@ -1,0 +1,63 @@
+.arena {
+	padding: 20px;
+	max-width: 1200px;
+	margin: 0 auto;
+}
+
+.council-list {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+	gap: 20px;
+	margin-top: 20px;
+}
+
+.council-person {
+	border: 1px solid #ccc;
+	padding: 15px;
+	border-radius: 8px;
+	cursor: pointer;
+	transition: all 0.3s ease;
+}
+
+.council-person:hover {
+	transform: translateY(-2px);
+	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.council-person.selected {
+	border-color: #007bff;
+	background-color: #f8f9fa;
+}
+
+.council-person h3 {
+	margin: 0 0 10px 0;
+	color: #333;
+}
+
+.council-person p {
+	margin: 5px 0;
+	color: #666;
+}
+
+.selected-person {
+	margin-top: 30px;
+	padding: 20px;
+	background-color: #f8f9fa;
+	border-radius: 8px;
+	border: 2px solid #007bff;
+}
+
+.selected-person h3 {
+	margin: 0 0 15px 0;
+	color: #007bff;
+}
+
+.selected-person h4 {
+	margin: 0 0 10px 0;
+	color: #333;
+}
+
+.selected-person p {
+	margin: 5px 0;
+	color: #666;
+}

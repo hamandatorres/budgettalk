@@ -5,8 +5,8 @@ import "./App.css";
 export default function App() {
 	return (
 		<div className="App">
+			<h1>BudgetTalk Council Members</h1>
 			<Arena />
-			<h1>"Hello"</h1>
 		</div>
 	);
 }

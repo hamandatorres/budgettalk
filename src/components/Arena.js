@@ -6,30 +6,60 @@ const API_URL =
 	"https://evening-cliffs-17109-56706eeb61a8.herokuapp.com";
 
 class Arena extends Component {
-	// this.setState = ({ this.arenaCp: this.props.moveCP})
+	state = {
+		councilPersons: [],
+		selectedPerson: null,
+	};
+
 	componentDidMount() {
-		this.getCp();
-		console.log(this.state.cp);
+		this.getCouncilPersons();
 	}
-	getCp = () => {
+
+	getCouncilPersons = () => {
 		axios
 			.get(`${API_URL}/api/councilperson`)
 			.then((response) => {
-				this.setState({ arenaCp: response.data });
+				this.setState({ councilPersons: response.data });
 			})
 			.catch((error) => console.log(error));
 	};
 
-	moveCp(cp) {
-		axios
-			.post(`${API_URL}/api/councilperson`, { cp: cp })
-			.then((response) => {
-				this.setState({ arenaCp: response.data });
-			})
-			.catch((error) => console.log(error));
-	}
+	selectPerson = (person) => {
+		this.setState({ selectedPerson: person });
+	};
+
 	render() {
-		return;
+		const { councilPersons, selectedPerson } = this.state;
+
+		return (
+			<div className="arena">
+				<h2>Council Members</h2>
+				<div className="council-list">
+					{councilPersons.map((person) => (
+						<div
+							key={person.id}
+							className={`council-person ${
+								selectedPerson?.id === person.id ? "selected" : ""
+							}`}
+							onClick={() => this.selectPerson(person)}
+						>
+							<h3>{person.name}</h3>
+							<p>Party: {person.party}</p>
+							<p>Years of Service: {person.seniority}</p>
+						</div>
+					))}
+				</div>
+
+				{selectedPerson && (
+					<div className="selected-person">
+						<h3>Selected Council Person</h3>
+						<h4>{selectedPerson.name}</h4>
+						<p>Party: {selectedPerson.party}</p>
+						<p>Years of Service: {selectedPerson.seniority}</p>
+					</div>
+				)}
+			</div>
+		);
 	}
 }
 
