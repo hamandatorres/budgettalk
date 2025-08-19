@@ -50,8 +50,32 @@
 	margin-bottom: 10px;
 }
 
-.winner-stats {
+.battle-details {
+	margin: 15px 0;
+	font-size: 12px;
+}
+
+.battle-point {
+	margin: 8px 0;
+	display: flex;
+	justify-content: space-between;
+	gap: 10px;
+}
+
+.category {
+	color: #666;
+}
+
+.point-winner {
+	color: #000;
+	font-weight: bold;
+}
+
+.final-score {
+	margin-top: 15px;
 	font-size: 14px;
+	border-top: 2px dashed #000;
+	padding-top: 10px;
 }
 
 @keyframes winner-appear {

@@ -79,15 +79,22 @@ h2 {
 
 .council-list {
 	display: grid;
-	grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-	gap: 15px;
+	grid-template-columns: repeat(2, 1fr);
+	gap: 10px;
 	max-height: 0;
 	overflow: hidden;
 	transition: max-height 0.3s step-end;
+	padding: 0 10px;
 }
 
 .council-list.expanded {
 	max-height: 1000px;
+	padding: 10px;
+}
+
+.council-person {
+	position: relative;
+	z-index: 1;
 }
 
 .council-person {

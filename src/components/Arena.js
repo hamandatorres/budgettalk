@@ -1,9 +1,8 @@
 import React, { Component } from "react";
 import axios from "axios";
 import FightResult from "./FightResult";
-import "./Arena.css";												<h3>{person.name}</h3>
-												<p>Years: {person.seniority}</p>
-												<p>Wins: {person.wins || 0}</p>
+import "./Arena.css";
+
 const API_URL =
 	process.env.REACT_APP_API_URL ||
 	"https://evening-cliffs-17109-56706eeb61a8.herokuapp.com";
@@ -15,6 +14,7 @@ class Arena extends Component {
 		selectedPerson2: null,
 		winner: null,
 		expandedParty: null,
+		battleDetails: null,
 	};
 
 	componentDidMount() {
@@ -77,17 +77,120 @@ class Arena extends Component {
 		}
 	};
 
-	handleBattle = () => {
+	calculateBattlePoints = (fighter1, fighter2) => {
+		let points1 = 0;
+		let points2 = 0;
+		let scoreDetails = [];
+
+		// Points for years of service
+		if (fighter1.seniority > fighter2.seniority) {
+			points1++;
+			scoreDetails.push({
+				category: "Years of Service",
+				winner: fighter1.name,
+			});
+		} else if (fighter2.seniority > fighter1.seniority) {
+			points2++;
+			scoreDetails.push({
+				category: "Years of Service",
+				winner: fighter2.name,
+			});
+		}
+
+		// Points for wins
+		const wins1 = fighter1.wins || 0;
+		const wins2 = fighter2.wins || 0;
+		if (wins1 > wins2) {
+			points1++;
+			scoreDetails.push({ category: "Experience", winner: fighter1.name });
+		} else if (wins2 > wins1) {
+			points2++;
+			scoreDetails.push({ category: "Experience", winner: fighter2.name });
+		}
+
+		// Random point
+		const randomPoint = Math.random() < 0.5;
+		if (randomPoint) {
+			points1++;
+			scoreDetails.push({ category: "Random Factor", winner: fighter1.name });
+		} else {
+			points2++;
+			scoreDetails.push({ category: "Random Factor", winner: fighter2.name });
+		}
+
+		return {
+			fighter1Points: points1,
+			fighter2Points: points2,
+			winner: points1 > points2 ? fighter1 : fighter2,
+			scoreDetails,
+		};
+	};
+
+	handleBattle = async () => {
 		const { selectedPerson1, selectedPerson2 } = this.state;
 		if (!selectedPerson1 || !selectedPerson2) return;
 
-		// Compare years of service
-		const winner =
-			selectedPerson1.seniority > selectedPerson2.seniority
-				? selectedPerson1
-				: selectedPerson2;
+		try {
+			// Calculate battle points and determine winner
+			const battleResult = this.calculateBattlePoints(
+				selectedPerson1,
+				selectedPerson2
+			);
+			const winner = battleResult.winner;
+			const loser =
+				winner.id === selectedPerson1.id ? selectedPerson2 : selectedPerson1;
 
-		this.setState({ winner });
+			// Update winner's wins count
+			const updatedWinner = {
+				...winner,
+				wins: (winner.wins || 0) + 1,
+			};
+
+			// Update winner in database
+			await axios.put(
+				`${API_URL}/api/councilperson/${winner.id}`,
+				updatedWinner
+			);
+
+			// Delete loser and get replacement
+			const response = await axios.delete(
+				`${API_URL}/api/councilperson/${loser.id}`
+			);
+			const { replacement } = response.data;
+
+			// Update local state
+			this.setState((prevState) => ({
+				winner: updatedWinner,
+				battleDetails: battleResult,
+				councilPersons: prevState.councilPersons.map((person) => {
+					if (person.id === winner.id) return updatedWinner;
+					if (person.id === loser.id) return replacement;
+					return person;
+				}),
+				selectedPerson1:
+					winner.id === selectedPerson1.id ? updatedWinner : null,
+				selectedPerson2:
+					winner.id === selectedPerson2.id ? updatedWinner : null,
+			}));
+		} catch (error) {
+			console.error("Error handling battle:", error);
+		}
+	};
+
+	groupByParty = (councilPersons) => {
+		return councilPersons.reduce((groups, person) => {
+			if (!groups[person.party]) {
+				groups[person.party] = [];
+			}
+			groups[person.party].push(person);
+			return groups;
+		}, {});
+	};
+
+	toggleParty = (party) => {
+		this.setState((prevState) => ({
+			expandedParty: prevState.expandedParty === party ? null : party,
+		}));
 	};
 
 	render() {
@@ -136,6 +239,7 @@ class Arena extends Component {
 												>
 													<h3>{person.name}</h3>
 													<p>Years: {person.seniority}</p>
+													<p>Wins: {person.wins || 0}</p>
 												</div>
 											))}
 										</div>
@@ -202,6 +306,7 @@ class Arena extends Component {
 						fighter2={selectedPerson2}
 						onBattle={this.handleBattle}
 						winner={this.state.winner}
+						battleDetails={this.state.battleDetails}
 					/>
 				</div>
 			</div>
