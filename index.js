@@ -19,6 +19,7 @@ app.use(express.json());
 app.get("/api/councilperson", councilPerson.getAllCouncilPersons);
 app.get("/api/councilperson/:id", councilPerson.getCouncilPersonById);
 app.put("/api/councilperson/:id", councilPerson.updateCouncilPerson);
+app.delete("/api/councilperson/:id", councilPerson.deleteAndReplace);
 // app.get('https://randomuser.me/api/', (req, res) => {
 //   // axios.get('https://randomuser.me/api/')
 //   .then(response => {
