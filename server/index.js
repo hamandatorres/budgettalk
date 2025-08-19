@@ -2,6 +2,17 @@ const express = require("express");
 const app = express();
 const councilPerson = require("./controllers/councilPerson");
 
+// Add CORS middleware
+app.use((req, res, next) => {
+	res.header("Access-Control-Allow-Origin", "*");
+	res.header(
+		"Access-Control-Allow-Headers",
+		"Origin, X-Requested-With, Content-Type, Accept"
+	);
+	res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+	next();
+});
+
 app.use(express.json());
 
 // Council Person routes
@@ -22,5 +33,5 @@ app.put("/api/councilperson/:id", councilPerson.updateCouncilPerson);
 // // app.put('https://randomuser.me/api/?inc=name,dob', )
 // // app.delete('https://randomuser.me/api/?inc=name,dob', )
 
-const port = 4000;
-app.listen(port, () => console.log(`Server running on ${port}`));
+const port = process.env.PORT || 4000;
+app.listen(port, () => console.log(`Server running on port ${port}`));
