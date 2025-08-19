@@ -1,0 +1,76 @@
+.fight-result {
+	margin-top: 20px;
+	text-align: center;
+	font-family: "Press Start 2P", cursive;
+}
+
+.battle-button {
+	background: #000;
+	color: #fff;
+	border: none;
+	padding: 15px 30px;
+	font-family: "Press Start 2P", cursive;
+	font-size: 20px;
+	cursor: pointer;
+	transition: all 0.1s step-end;
+	position: relative;
+	box-shadow: 4px 4px 0 #666;
+}
+
+.battle-button:hover:not(.disabled) {
+	transform: translate(-2px, -2px);
+	box-shadow: 6px 6px 0 #666;
+}
+
+.battle-button:active:not(.disabled) {
+	transform: translate(2px, 2px);
+	box-shadow: 2px 2px 0 #666;
+}
+
+.battle-button.disabled {
+	opacity: 0.5;
+	cursor: not-allowed;
+	box-shadow: none;
+}
+
+.winner-display {
+	margin-top: 20px;
+	animation: winner-appear 0.5s step-end;
+}
+
+.winner-text {
+	font-size: 24px;
+	color: #000;
+	margin-bottom: 10px;
+	animation: blink 1s step-end infinite;
+}
+
+.winner-name {
+	font-size: 18px;
+	margin-bottom: 10px;
+}
+
+.winner-stats {
+	font-size: 14px;
+}
+
+@keyframes winner-appear {
+	from {
+		transform: scale(0);
+	}
+	to {
+		transform: scale(1);
+	}
+}
+
+@keyframes blink {
+	0% {
+		opacity: 1;
+	}
+	50% {
+		opacity: 0;
+	}
+	100% {
+		opacity: 1;
+	}
+}

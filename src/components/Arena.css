@@ -1,63 +1,172 @@
-.arena {
+@import url("https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap");
+
+.arena-container {
 	padding: 20px;
 	max-width: 1200px;
 	margin: 0 auto;
+	font-family: "Press Start 2P", cursive;
+	display: flex;
+	flex-direction: column;
+	gap: 40px;
+}
+
+.roster {
+	width: 100%;
+}
+
+h2 {
+	text-align: center;
+	margin-bottom: 20px;
+	text-transform: uppercase;
+	letter-spacing: 2px;
+	font-size: 16px;
 }
 
 .council-list {
 	display: grid;
-	grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-	gap: 20px;
+	grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+	gap: 15px;
 	margin-top: 20px;
 }
 
 .council-person {
-	border: 1px solid #ccc;
-	padding: 15px;
-	border-radius: 8px;
-	cursor: pointer;
-	transition: all 0.3s ease;
+	border: 2px solid #000;
+	padding: 10px;
+	cursor: grab;
+	transition: all 0.1s ease;
+	background: #fff;
+	image-rendering: pixelated;
 }
 
 .council-person:hover {
-	transform: translateY(-2px);
-	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+	transform: scale(1.02);
+	box-shadow: 4px 4px 0 #000;
 }
 
 .council-person.selected {
-	border-color: #007bff;
-	background-color: #f8f9fa;
+	border: 2px dashed #000;
+	background-color: #000;
+	color: #fff;
+	animation: blink 1s step-end infinite;
+}
+
+.council-person.dragging {
+	opacity: 0.5;
+	cursor: grabbing;
 }
 
 .council-person h3 {
 	margin: 0 0 10px 0;
-	color: #333;
+	font-size: 12px;
+	text-transform: uppercase;
 }
 
 .council-person p {
 	margin: 5px 0;
-	color: #666;
+	font-size: 10px;
 }
 
-.selected-person {
-	margin-top: 30px;
+.battle-arena {
+	border: 4px solid #000;
 	padding: 20px;
-	background-color: #f8f9fa;
-	border-radius: 8px;
-	border: 2px solid #007bff;
+	margin-top: 20px;
+	background: #fff;
 }
 
-.selected-person h3 {
-	margin: 0 0 15px 0;
-	color: #007bff;
+.versus-container {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin-top: 20px;
+	gap: 20px;
 }
 
-.selected-person h4 {
-	margin: 0 0 10px 0;
-	color: #333;
+.challenger {
+	flex: 1;
+	max-width: 300px;
 }
 
-.selected-person p {
-	margin: 5px 0;
+.arena-fighter {
+	border: 2px solid #000;
+	padding: 15px;
+	text-align: center;
+	min-height: 150px;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	background: #fff;
+	cursor: pointer;
+	transition: all 0.2s ease;
+}
+
+.arena-fighter.empty {
+	border: 2px dashed #000;
 	color: #666;
+	animation: pulse-border 2s infinite;
+}
+
+.arena-fighter.drag-over {
+	background-color: #000;
+	color: #fff;
+	transform: scale(1.05);
+}
+
+@keyframes pulse-border {
+	0% {
+		border-color: #000;
+	}
+	50% {
+		border-color: #666;
+	}
+	100% {
+		border-color: #000;
+	}
+}
+
+.arena-fighter h3 {
+	font-size: 12px;
+	margin-bottom: 10px;
+	text-transform: uppercase;
+}
+
+.arena-fighter p {
+	font-size: 10px;
+	margin: 5px 0;
+}
+
+.versus {
+	font-size: 24px;
+	font-weight: bold;
+	animation: pulse 2s step-end infinite;
+}
+
+@keyframes blink {
+	0% {
+		background-color: #000;
+		color: #fff;
+	}
+	50% {
+		background-color: #fff;
+		color: #000;
+	}
+}
+
+@keyframes pulse {
+	0% {
+		transform: scale(1);
+	}
+	50% {
+		transform: scale(1.1);
+	}
+}
+
+@keyframes blink {
+	0% {
+		background-color: #000;
+		color: #fff;
+	}
+	50% {
+		background-color: #fff;
+		color: #000;
+	}
 }
