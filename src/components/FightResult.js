@@ -21,7 +21,8 @@ const FightResult = ({ fighter1, fighter2, onBattle, winner }) => {
 					<div className="winner-text">WINNER!</div>
 					<div className="winner-name">{winner.name}</div>
 					<div className="winner-stats">
-						Years of Service: {winner.seniority}
+						<p>Years of Service: {winner.seniority}</p>
+						<p>Wins: {winner.wins || 0}</p>
 					</div>
 				</div>
 			)}

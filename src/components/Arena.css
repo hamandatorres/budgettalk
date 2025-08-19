@@ -22,11 +22,72 @@ h2 {
 	font-size: 16px;
 }
 
+.party-groups {
+	display: flex;
+	flex-direction: column;
+	gap: 20px;
+	margin-top: 20px;
+}
+
+.party-group {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+}
+
+.party-button {
+	font-family: "Press Start 2P", cursive;
+	background: #000;
+	color: #fff;
+	border: none;
+	padding: 15px;
+	cursor: pointer;
+	text-transform: uppercase;
+	font-size: 14px;
+	position: relative;
+	transition: all 0.1s step-end;
+	box-shadow: 4px 4px 0 #666;
+}
+
+.party-button:hover {
+	transform: translate(-2px, -2px);
+	box-shadow: 6px 6px 0 #666;
+}
+
+.party-button:active {
+	transform: translate(2px, 2px);
+	box-shadow: 2px 2px 0 #666;
+}
+
+.party-button.expanded {
+	background: #fff;
+	color: #000;
+	border: 2px solid #000;
+}
+
+.party-button::after {
+	content: "+";
+	position: absolute;
+	right: 15px;
+	top: 50%;
+	transform: translateY(-50%);
+}
+
+.party-button.expanded::after {
+	content: "-";
+}
+
 .council-list {
 	display: grid;
 	grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
 	gap: 15px;
-	margin-top: 20px;
+	max-height: 0;
+	overflow: hidden;
+	transition: max-height 0.3s step-end;
+}
+
+.council-list.expanded {
+	max-height: 1000px;
 }
 
 .council-person {

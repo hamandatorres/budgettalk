@@ -1,8 +1,9 @@
 import React, { Component } from "react";
 import axios from "axios";
 import FightResult from "./FightResult";
-import "./Arena.css";
-
+import "./Arena.css";												<h3>{person.name}</h3>
+												<p>Years: {person.seniority}</p>
+												<p>Wins: {person.wins || 0}</p>
 const API_URL =
 	process.env.REACT_APP_API_URL ||
 	"https://evening-cliffs-17109-56706eeb61a8.herokuapp.com";
@@ -13,6 +14,7 @@ class Arena extends Component {
 		selectedPerson1: null,
 		selectedPerson2: null,
 		winner: null,
+		expandedParty: null,
 	};
 
 	componentDidMount() {
@@ -102,25 +104,44 @@ class Arena extends Component {
 							<p>API URL: {API_URL}</p>
 						</div>
 					) : (
-						<div className="council-list">
-							{councilPersons.map((person) => (
-								<div
-									key={person.id}
-									className={`council-person ${
-										selectedPerson1?.id === person.id ||
-										selectedPerson2?.id === person.id
-											? "selected"
-											: ""
-									}`}
-									draggable="true"
-									onDragStart={(e) => this.handleDragStart(e, person)}
-									onDragEnd={this.handleDragEnd}
-								>
-									<h3>{person.name}</h3>
-									<p>Party: {person.party}</p>
-									<p>Years: {person.seniority}</p>
-								</div>
-							))}
+						<div className="party-groups">
+							{Object.entries(this.groupByParty(councilPersons)).map(
+								([party, members]) => (
+									<div key={party} className="party-group">
+										<button
+											className={`party-button ${
+												this.state.expandedParty === party ? "expanded" : ""
+											}`}
+											onClick={() => this.toggleParty(party)}
+										>
+											{party} Party ({members.length})
+										</button>
+										<div
+											className={`council-list ${
+												this.state.expandedParty === party ? "expanded" : ""
+											}`}
+										>
+											{members.map((person) => (
+												<div
+													key={person.id}
+													className={`council-person ${
+														selectedPerson1?.id === person.id ||
+														selectedPerson2?.id === person.id
+															? "selected"
+															: ""
+													}`}
+													draggable="true"
+													onDragStart={(e) => this.handleDragStart(e, person)}
+													onDragEnd={this.handleDragEnd}
+												>
+													<h3>{person.name}</h3>
+													<p>Years: {person.seniority}</p>
+												</div>
+											))}
+										</div>
+									</div>
+								)
+							)}
 						</div>
 					)}
 				</div>
@@ -143,6 +164,7 @@ class Arena extends Component {
 										<h3>{selectedPerson1.name}</h3>
 										<p>Party: {selectedPerson1.party}</p>
 										<p>Years: {selectedPerson1.seniority}</p>
+										<p>Wins: {selectedPerson1.wins || 0}</p>
 									</>
 								) : (
 									<h3>Drag Member Here</h3>
@@ -167,6 +189,7 @@ class Arena extends Component {
 										<h3>{selectedPerson2.name}</h3>
 										<p>Party: {selectedPerson2.party}</p>
 										<p>Years: {selectedPerson2.seniority}</p>
+										<p>Wins: {selectedPerson2.wins || 0}</p>
 									</>
 								) : (
 									<h3>Drag Member Here</h3>
