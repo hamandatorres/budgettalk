@@ -35,6 +35,8 @@ const councilPersons = [
 module.exports = {
 	// Get all council persons
 	getAllCouncilPersons: (req, res) => {
+		console.log("GET /api/councilperson called");
+		console.log("Sending council persons:", councilPersons);
 		res.status(200).json(councilPersons);
 	},
 
