@@ -1,35 +1,167 @@
-# Getting Started with Create React App
+# Budget Talk Showdown
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A fun and interactive council member battle simulation where representatives engage in budget talks. Built with React 18 and Express.js.
 
-## Available Scripts
+![Budget Talk Showdown](public/logo192.png)
 
-In the project directory, you can run:
+## 🎮 Features
 
-### `yarn start`
+- **Council Member Management**
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+  - View council members grouped by political party
+  - Add custom council members with unique names and attributes
+  - Track wins and seniority for each member
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+- **Battle System**
 
-### `yarn test`
+  - Drag-and-drop council members into battle positions
+  - Battle outcomes determined by:
+    - Years of service (seniority)
+    - Previous wins
+    - Random factor for unpredictability
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- **Party System**
+  - Five distinct parties: Progressive, Conservative, Moderate, Independent, and Green
+  - Each party maintains its own roster
+  - Members are replaced upon defeat (except user-created members)
 
-### `yarn build`
+## 🚀 Getting Started
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### Prerequisites
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+- Node.js >=18.0.0
+- npm or yarn
+- Git
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### Installation
 
-### `yarn eject`
+1. Clone the repository:
+
+   ```bash
+   git clone https://github.com/hamandatorres/budgettalk.git
+   cd budgettalk
+   ```
+
+2. Install dependencies for both frontend and backend:
+
+   ```bash
+   # Install frontend dependencies
+   npm install
+
+   # Install backend dependencies
+   cd server
+   npm install
+   ```
+
+3. Start the development servers:
+
+   In the main directory:
+
+   ```bash
+   # Start frontend
+   npm start
+   ```
+
+   In the server directory:
+
+   ```bash
+   # Start backend
+   npm start
+   ```
+
+The frontend will be available at [http://localhost:3000/budgettalk](http://localhost:3000/budgettalk)
+
+## 🎮 How to Play
+
+1. **View Council Members**
+
+   - Members are grouped by their political party
+   - Click on party headers to expand/collapse member lists
+   - Each member shows their name, years of service, and win count
+
+2. **Add Custom Members**
+
+   - Click "Add Council Member" button
+   - Enter name, select party, and set years of service (1-50)
+   - Custom members are removed (not replaced) when they lose
+
+3. **Battle System**
+   - Drag members from their party lists to the battle arena
+   - Click "TALK!" to initiate the budget battle
+   - Winners gain experience points
+   - Losing system-generated members are replaced
+   - Losing user-created members are permanently removed
+
+## 🛠️ Technology Stack
+
+- **Frontend**
+
+  - React 18
+  - Modern JavaScript (ES6+)
+  - CSS3 with retro gaming style
+  - Axios for API calls
+
+- **Backend**
+  - Express.js
+  - Node.js
+  - In-memory data storage
+
+## 🚀 Deployment
+
+The application is deployed at:
+
+- Frontend: [GitHub Pages](https://hamandatorres.github.io/budgettalk)
+- Backend: [Heroku](https://evening-cliffs-17109-56706eeb61a8.herokuapp.com)
+
+## 🔨 Development
+
+### Available Scripts
+
+- `npm start` - Run the frontend development server
+- `npm test` - Run the test suite
+- `npm run build` - Create a production build
+- `npm run deploy` - Deploy to GitHub Pages
+
+### Backend Scripts
+
+In the server directory:
+
+- `npm start` - Run the backend server
+
+## 📝 API Endpoints
+
+- `GET /api/councilperson` - Get all council members
+- `POST /api/councilperson` - Create a new council member
+- `PUT /api/councilperson/:id` - Update a council member
+- `DELETE /api/councilperson/:id` - Delete/replace a council member
+
+## 🎨 Styling
+
+The application features a retro gaming aesthetic with:
+
+- Pixel-perfect fonts
+- 8-bit style buttons and borders
+- Responsive design for all screen sizes
+- Drag and drop interface
+- Clean animations and transitions
+
+## 👥 Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Commit your changes
+4. Push to the branch
+5. Open a Pull Request
+
+## 📄 License
+
+This project is licensed under the ISC License.
+
+## 🙏 Acknowledgments
+
+- [Create React App](https://github.com/facebook/create-react-app)
+- [Press Start 2P Font](https://fonts.google.com/specimen/Press+Start+2P)
+- [React Drag and Drop API](https://react-dnd.github.io/react-dnd/)
 
 **Note: this is a one-way operation. Once you `eject`, you can’t go back!**
 
