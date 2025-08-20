@@ -1,13 +1,13 @@
 {
   "files": {
-    "main.css": "/budgettalk/static/css/main.a9192359.css",
-    "main.js": "/budgettalk/static/js/main.14690a4f.js",
+    "main.css": "/budgettalk/static/css/main.edd7e074.css",
+    "main.js": "/budgettalk/static/js/main.ee6b0f0b.js",
     "index.html": "/budgettalk/index.html",
-    "main.a9192359.css.map": "/budgettalk/static/css/main.a9192359.css.map",
-    "main.14690a4f.js.map": "/budgettalk/static/js/main.14690a4f.js.map"
+    "main.edd7e074.css.map": "/budgettalk/static/css/main.edd7e074.css.map",
+    "main.ee6b0f0b.js.map": "/budgettalk/static/js/main.ee6b0f0b.js.map"
   },
   "entrypoints": [
-    "static/css/main.a9192359.css",
-    "static/js/main.14690a4f.js"
+    "static/css/main.edd7e074.css",
+    "static/js/main.ee6b0f0b.js"
   ]
 }
