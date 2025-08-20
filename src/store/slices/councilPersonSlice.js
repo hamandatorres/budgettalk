@@ -38,6 +38,42 @@ const slice = createSlice({
 				}
 			},
 		},
+		startNewSession: {
+			reducer(state) {
+				// Group members by party
+				const partyGroups = state.list.reduce((groups, person) => {
+					const party = person.party || "Independent";
+					if (!groups[party]) {
+						groups[party] = [];
+					}
+					groups[party].push(person);
+					return groups;
+				}, {});
+
+				// For each party, keep only top 2 members by wins
+				const newList = [];
+				Object.entries(partyGroups).forEach(([party, members]) => {
+					// Sort by wins (descending)
+					const sortedMembers = [...members].sort((a, b) => {
+						const winsA = a.wins || 0;
+						const winsB = b.wins || 0;
+						if (winsB !== winsA) return winsB - winsA;
+						// If wins are equal, randomize
+						return Math.random() - 0.5;
+					});
+
+					// Keep only top 2 members
+					const survivors = sortedMembers.slice(0, 2);
+					survivors.forEach((member) => {
+						// Reset wins for new session
+						member.wins = 0;
+					});
+					newList.push(...survivors);
+				});
+
+				state.list = newList;
+			},
+		},
 	},
 	extraReducers: (builder) => {
 		builder
@@ -96,5 +132,5 @@ export const deleteAndReplaceCouncilPerson = createAsyncThunk(
 	async (id) => (await axiosInstance.delete(`/api/councilperson/${id}`)).data
 );
 
-export const { recordWin, eliminateLoser } = slice.actions;
+export const { recordWin, eliminateLoser, startNewSession } = slice.actions;
 export default slice.reducer;

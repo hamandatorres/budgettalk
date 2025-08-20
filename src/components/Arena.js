@@ -4,9 +4,11 @@ import {
 	fetchCouncilPersons,
 	recordWin,
 	eliminateLoser,
+	startNewSession,
 } from "../store/slices/councilPersonSlice";
 import { toggleModal } from "../store/slices/uiSlice";
 import { setBattleResult } from "../store/slices/battleSlice";
+import { setSelectedMember } from "../store/slices/selectionSlice";
 import AddCouncilPersonModal from "./AddCouncilPersonModal";
 import FightResult from "./FightResult";
 import "./Arena.css";
@@ -14,9 +16,13 @@ import "./Arena.css";
 const Arena = () => {
 	const dispatch = useDispatch();
 	const { list, loading, error } = useSelector((state) => state.councilPerson);
+	const selectedMemberId = useSelector(
+		(state) => state.selection.selectedMemberId
+	);
 	const [expandedParty, setExpandedParty] = useState(null);
 	const [selectedFighter1, setSelectedFighter1] = useState(null);
 	const [selectedFighter2, setSelectedFighter2] = useState(null);
+	const [showConfirmDialog, setShowConfirmDialog] = useState(false);
 
 	useEffect(() => {
 		dispatch(fetchCouncilPersons());
@@ -46,15 +52,19 @@ const Arena = () => {
 	const handleFighterSelect = (person) => {
 		if (!selectedFighter1) {
 			setSelectedFighter1(person);
+			dispatch(setSelectedMember(person.id));
 		} else if (!selectedFighter2 && person.id !== selectedFighter1.id) {
 			setSelectedFighter2(person);
+			dispatch(setSelectedMember(person.id));
 		}
 	};
 
 	const handleFighterRemove = (position) => {
 		if (position === 1) {
+			dispatch(setSelectedMember(null));
 			setSelectedFighter1(null);
 		} else {
+			dispatch(setSelectedMember(null));
 			setSelectedFighter2(null);
 		}
 	};
@@ -64,12 +74,20 @@ const Arena = () => {
 			<div className="roster">
 				<div className="roster-header">
 					<h2>Council Roster</h2>
-					<button
-						className="add-button"
-						onClick={() => dispatch(toggleModal())}
-					>
-						Add Council Person
-					</button>
+					<div className="roster-buttons">
+						<button
+							className="new-session-button"
+							onClick={() => setShowConfirmDialog(true)}
+						>
+							Start New Session
+						</button>
+						<button
+							className="add-button"
+							onClick={() => dispatch(toggleModal())}
+						>
+							Add Council Person
+						</button>
+					</div>
 				</div>
 				<div className="party-groups">
 					{Object.entries(partyGroups).map(([party, members]) => (
@@ -110,7 +128,42 @@ const Arena = () => {
 			</div>
 
 			<div className="battle-arena">
-				<h2>Battle Arena</h2>
+				<div className="arena-header">
+					<h2>Battle Arena</h2>
+				</div>
+				{showConfirmDialog && (
+					<div className="confirm-dialog">
+						<div className="confirm-dialog-content">
+							<h3>Start New Session?</h3>
+							<p>This will:</p>
+							<ul>
+								<li>Keep only top 2 members from each party (by wins)</li>
+								<li>Reset all win counts to zero</li>
+								<li>Remove all other council members</li>
+							</ul>
+							<div className="confirm-dialog-buttons">
+								<button
+									className="confirm-button"
+									onClick={() => {
+										dispatch(startNewSession());
+										setShowConfirmDialog(false);
+										setSelectedFighter1(null);
+										setSelectedFighter2(null);
+										dispatch(setSelectedMember(null));
+									}}
+								>
+									Confirm
+								</button>
+								<button
+									className="cancel-button"
+									onClick={() => setShowConfirmDialog(false)}
+								>
+									Cancel
+								</button>
+							</div>
+						</div>
+					</div>
+				)}
 				<div className="versus-container">
 					<div className="challenger">
 						<div
