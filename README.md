@@ -32,6 +32,7 @@ A fun and interactive council member battle simulation where representatives eng
 - Node.js >=18.0.0
 - npm or yarn
 - Git
+- Redux DevTools (browser extension) for development
 
 ### Installation
 
@@ -71,6 +72,12 @@ A fun and interactive council member battle simulation where representatives eng
 
 The frontend will be available at [http://localhost:3000/budgettalk](http://localhost:3000/budgettalk)
 
+### Development Tools
+
+- Install Redux DevTools browser extension for debugging:
+  - [Chrome Extension](https://chrome.google.com/webstore/detail/redux-devtools/lmhkpmbekcpmknklioeibfkpmmfibljd)
+  - [Firefox Add-on](https://addons.mozilla.org/en-US/firefox/addon/reduxdevtools/)
+
 ## 🎮 How to Play
 
 1. **View Council Members**
@@ -97,6 +104,10 @@ The frontend will be available at [http://localhost:3000/budgettalk](http://loca
 - **Frontend**
 
   - React 18
+  - Redux with Redux Toolkit for state management
+    - Centralized state handling
+    - Async action creators for API calls
+    - Optimized component rendering
   - Modern JavaScript (ES6+)
   - CSS3 with retro gaming style
   - Axios for API calls
@@ -105,6 +116,36 @@ The frontend will be available at [http://localhost:3000/budgettalk](http://loca
   - Express.js
   - Node.js
   - In-memory data storage
+
+## 🏗️ Architecture
+
+### Redux Store Structure
+
+```
+store/
+├── slices/
+│   ├── councilPersonSlice.js    # Council member data and API calls
+│   ├── battleSlice.js           # Battle state and logic
+│   └── uiSlice.js              # UI state (modals, expanded parties)
+└── index.js                     # Store configuration
+```
+
+### State Management
+
+- **Council Person State**
+  - List of all council members
+  - Loading and error states
+  - CRUD operations through async thunks
+
+- **Battle State**
+  - Selected fighters
+  - Winner information
+  - Battle details and scoring
+
+- **UI State**
+  - Modal visibility
+  - Expanded party sections
+  - Loading indicators
 
 ## 🚀 Deployment
 
@@ -128,7 +169,48 @@ In the server directory:
 
 - `npm start` - Run the backend server
 
-## 📝 API Endpoints
+## � State Flow
+
+### Component Structure
+
+```
+App
+└── Arena
+    ├── Council Member List
+    │   └── Council Member (draggable)
+    ├── Battle Arena
+    │   ├── Fighter Slot 1
+    │   ├── Fighter Slot 2
+    │   └── FightResult
+    └── AddCouncilPersonModal
+```
+
+### Redux Action Flow
+
+1. **Council Member Management**
+   ```
+   User Action → Redux Action → API Call → Update Store → UI Update
+   ```
+   Example: Adding a new council member
+   - User submits form
+   - `createCouncilPerson` thunk dispatched
+   - API call to create member
+   - Store updated with new member
+   - UI refreshes automatically
+
+2. **Battle System**
+   ```
+   User Action → Battle Logic → API Updates → Store Updates → UI Updates
+   ```
+   Example: Battle sequence
+   - User clicks "TALK!"
+   - Battle calculations performed
+   - Winner's stats updated in API
+   - Loser removed/replaced via API
+   - Store updated with results
+   - UI shows winner and updates roster
+
+## �📝 API Endpoints
 
 - `GET /api/councilperson` - Get all council members
 - `POST /api/councilperson` - Create a new council member
@@ -160,8 +242,10 @@ This project is licensed under the ISC License.
 ## 🙏 Acknowledgments
 
 - [Create React App](https://github.com/facebook/create-react-app)
+- [Redux Toolkit](https://redux-toolkit.js.org/)
 - [Press Start 2P Font](https://fonts.google.com/specimen/Press+Start+2P)
 - [React Drag and Drop API](https://react-dnd.github.io/react-dnd/)
+- [Redux DevTools](https://github.com/reduxjs/redux-devtools)
 
 **Note: this is a one-way operation. Once you `eject`, you can’t go back!**
 
