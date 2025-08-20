@@ -14,12 +14,41 @@
 	width: 100%;
 }
 
+.roster-header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin-bottom: 20px;
+}
+
 h2 {
 	text-align: center;
-	margin-bottom: 20px;
 	text-transform: uppercase;
 	letter-spacing: 2px;
 	font-size: 16px;
+	margin: 0;
+}
+
+.add-button {
+	font-family: "Press Start 2P", cursive;
+	background: #000;
+	color: #fff;
+	border: none;
+	padding: 10px 20px;
+	cursor: pointer;
+	font-size: 12px;
+	transition: all 0.1s step-end;
+	box-shadow: 4px 4px 0 #666;
+}
+
+.add-button:hover {
+	transform: translate(-2px, -2px);
+	box-shadow: 6px 6px 0 #666;
+}
+
+.add-button:active {
+	transform: translate(2px, 2px);
+	box-shadow: 2px 2px 0 #666;
 }
 
 .party-groups {
@@ -78,18 +107,14 @@ h2 {
 }
 
 .council-list {
-	display: grid;
+	display: none;
 	grid-template-columns: repeat(2, 1fr);
 	gap: 10px;
-	max-height: 0;
-	overflow: hidden;
-	transition: max-height 0.3s step-end;
-	padding: 0 10px;
+	padding: 10px;
 }
 
 .council-list.expanded {
-	max-height: 1000px;
-	padding: 10px;
+	display: grid;
 }
 
 .council-person {
@@ -107,15 +132,13 @@ h2 {
 }
 
 .council-person:hover {
-	transform: scale(1.02);
 	box-shadow: 4px 4px 0 #000;
 }
 
 .council-person.selected {
-	border: 2px dashed #000;
+	border: 2px solid #000;
 	background-color: #000;
 	color: #fff;
-	animation: blink 1s step-end infinite;
 }
 
 .council-person.dragging {
@@ -170,13 +193,11 @@ h2 {
 .arena-fighter.empty {
 	border: 2px dashed #000;
 	color: #666;
-	animation: pulse-border 2s infinite;
 }
 
 .arena-fighter.drag-over {
 	background-color: #000;
 	color: #fff;
-	transform: scale(1.05);
 }
 
 @keyframes pulse-border {
@@ -205,36 +226,4 @@ h2 {
 .versus {
 	font-size: 24px;
 	font-weight: bold;
-	animation: pulse 2s step-end infinite;
-}
-
-@keyframes blink {
-	0% {
-		background-color: #000;
-		color: #fff;
-	}
-	50% {
-		background-color: #fff;
-		color: #000;
-	}
-}
-
-@keyframes pulse {
-	0% {
-		transform: scale(1);
-	}
-	50% {
-		transform: scale(1.1);
-	}
-}
-
-@keyframes blink {
-	0% {
-		background-color: #000;
-		color: #fff;
-	}
-	50% {
-		background-color: #fff;
-		color: #000;
-	}
 }

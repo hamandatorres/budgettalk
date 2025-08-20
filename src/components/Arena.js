@@ -1,11 +1,18 @@
 import React, { Component } from "react";
 import axios from "axios";
 import FightResult from "./FightResult";
+import AddCouncilPersonModal from "./AddCouncilPersonModal";
 import "./Arena.css";
 
-const API_URL =
-	process.env.REACT_APP_API_URL ||
-	"https://evening-cliffs-17109-56706eeb61a8.herokuapp.com";
+// Axios instance with default configuration
+const axiosInstance = axios.create({
+	baseURL:
+		process.env.REACT_APP_API_URL ||
+		"https://evening-cliffs-17109-56706eeb61a8.herokuapp.com",
+	headers: {
+		"Content-Type": "application/json",
+	},
+});
 
 class Arena extends Component {
 	state = {
@@ -15,26 +22,22 @@ class Arena extends Component {
 		winner: null,
 		expandedParty: null,
 		battleDetails: null,
+		isModalOpen: false,
 	};
 
 	componentDidMount() {
 		this.getCouncilPersons();
 	}
 
-	getCouncilPersons = () => {
-		console.log(
-			"Fetching council persons from:",
-			`${API_URL}/api/councilperson`
-		);
-		axios
-			.get(`${API_URL}/api/councilperson`)
-			.then((response) => {
-				console.log("Received data:", response.data);
-				this.setState({ councilPersons: response.data });
-			})
-			.catch((error) => {
-				console.error("Error fetching council persons:", error);
-			});
+	getCouncilPersons = async () => {
+		try {
+			console.log("Fetching council persons");
+			const response = await axiosInstance.get("/api/councilperson");
+			console.log("Received data:", response.data);
+			this.setState({ councilPersons: response.data });
+		} catch (error) {
+			console.error("Error fetching council persons:", error);
+		}
 	};
 
 	handleDragStart = (e, person) => {
@@ -147,31 +150,34 @@ class Arena extends Component {
 			};
 
 			// Update winner in database
-			await axios.put(
-				`${API_URL}/api/councilperson/${winner.id}`,
-				updatedWinner
-			);
+			await axiosInstance.put(`/api/councilperson/${winner.id}`, updatedWinner);
 
 			// Delete loser and get replacement
-			const response = await axios.delete(
-				`${API_URL}/api/councilperson/${loser.id}`
+			const response = await axiosInstance.delete(
+				`/api/councilperson/${loser.id}`
 			);
 			const { replacement } = response.data;
 
 			// Update local state
-			this.setState((prevState) => ({
-				winner: updatedWinner,
-				battleDetails: battleResult,
-				councilPersons: prevState.councilPersons.map((person) => {
-					if (person.id === winner.id) return updatedWinner;
-					if (person.id === loser.id) return replacement;
-					return person;
-				}),
-				selectedPerson1:
-					winner.id === selectedPerson1.id ? updatedWinner : null,
-				selectedPerson2:
-					winner.id === selectedPerson2.id ? updatedWinner : null,
-			}));
+			this.setState((prevState) => {
+				const updatedCouncilPersons = prevState.councilPersons
+					.map((person) => {
+						if (person.id === winner.id) return updatedWinner;
+						if (person.id === loser.id) return replacement;
+						return person;
+					})
+					.filter((person) => person !== null); // Remove null replacements
+
+				return {
+					winner: updatedWinner,
+					battleDetails: battleResult,
+					councilPersons: updatedCouncilPersons,
+					selectedPerson1:
+						winner.id === selectedPerson1.id ? updatedWinner : null,
+					selectedPerson2:
+						winner.id === selectedPerson2.id ? updatedWinner : null,
+				};
+			});
 		} catch (error) {
 			console.error("Error handling battle:", error);
 		}
@@ -193,6 +199,25 @@ class Arena extends Component {
 		}));
 	};
 
+	handleAddCouncilPerson = async (formData) => {
+		try {
+			const response = await axiosInstance.post("/api/councilperson", formData);
+			this.setState((prevState) => ({
+				councilPersons: [...prevState.councilPersons, response.data],
+				isModalOpen: false,
+			}));
+		} catch (error) {
+			console.error("Error adding council person:", error);
+			alert(error.response?.data?.message || "Error adding council person");
+		}
+	};
+
+	toggleModal = () => {
+		this.setState((prevState) => ({
+			isModalOpen: !prevState.isModalOpen,
+		}));
+	};
+
 	render() {
 		const { councilPersons, selectedPerson1, selectedPerson2 } = this.state;
 		console.log("Current state:", this.state);
@@ -200,11 +225,15 @@ class Arena extends Component {
 		return (
 			<div className="arena-container">
 				<div className="roster">
-					<h2>Council Members</h2>
+					<div className="roster-header">
+						<h2>Council Members</h2>
+						<button className="add-button" onClick={this.toggleModal}>
+							Add Council Member
+						</button>
+					</div>
 					{councilPersons.length === 0 ? (
 						<div>
 							<p>Loading council members...</p>
-							<p>API URL: {API_URL}</p>
 						</div>
 					) : (
 						<div className="party-groups">
@@ -309,6 +338,11 @@ class Arena extends Component {
 						battleDetails={this.state.battleDetails}
 					/>
 				</div>
+				<AddCouncilPersonModal
+					isOpen={this.state.isModalOpen}
+					onClose={this.toggleModal}
+					onSave={this.handleAddCouncilPerson}
+				/>
 			</div>
 		);
 	}

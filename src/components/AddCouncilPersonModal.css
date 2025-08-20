@@ -1,0 +1,87 @@
+.modal-overlay {
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background-color: rgba(0, 0, 0, 0.7);
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	z-index: 1000;
+}
+
+.modal-content {
+	background: white;
+	padding: 20px;
+	border: 4px solid #000;
+	max-width: 500px;
+	width: 90%;
+	font-family: "Press Start 2P", cursive;
+}
+
+.modal-content h2 {
+	text-align: center;
+	font-size: 16px;
+	margin-bottom: 20px;
+}
+
+.form-group {
+	margin-bottom: 15px;
+}
+
+.form-group label {
+	display: block;
+	margin-bottom: 8px;
+	font-size: 12px;
+}
+
+.form-group input,
+.form-group select {
+	width: 100%;
+	padding: 8px;
+	font-family: "Press Start 2P", cursive;
+	border: 2px solid #000;
+	font-size: 12px;
+}
+
+.modal-buttons {
+	display: flex;
+	justify-content: center;
+	gap: 20px;
+	margin-top: 20px;
+}
+
+.save-button,
+.cancel-button {
+	font-family: "Press Start 2P", cursive;
+	padding: 10px 20px;
+	border: none;
+	cursor: pointer;
+	font-size: 12px;
+	transition: all 0.1s step-end;
+	box-shadow: 4px 4px 0 #666;
+}
+
+.save-button {
+	background: #000;
+	color: #fff;
+}
+
+.cancel-button {
+	background: #fff;
+	color: #000;
+	border: 2px solid #000;
+}
+
+.save-button:hover,
+.cancel-button:hover {
+	transform: translate(-2px, -2px);
+	box-shadow: 6px 6px 0 #666;
+}
+
+.save-button:active,
+.cancel-button:active {
+	transform: translate(2px, 2px);
+	box-shadow: 2px 2px 0 #666;
+}

@@ -5,6 +5,7 @@ const councilPersons = [
 		name: "Sarah Johnson",
 		party: "Progressive",
 		seniority: 8,
+		isUserCreated: false,
 	},
 	{
 		id: 2,
@@ -62,38 +63,182 @@ const councilPersons = [
 	},
 ];
 
+// Arrays for name generation
+const firstNames = [
+	"James",
+	"Mary",
+	"John",
+	"Patricia",
+	"Robert",
+	"Jennifer",
+	"Michael",
+	"Linda",
+	"William",
+	"Elizabeth",
+	"David",
+	"Barbara",
+	"Richard",
+	"Susan",
+	"Joseph",
+	"Jessica",
+	"Thomas",
+	"Sarah",
+	"Charles",
+	"Karen",
+	"Christopher",
+	"Nancy",
+	"Daniel",
+	"Lisa",
+	"Matthew",
+	"Betty",
+	"Anthony",
+	"Margaret",
+	"Donald",
+	"Sandra",
+	"Mark",
+	"Ashley",
+	"Paul",
+	"Kimberly",
+	"Steven",
+	"Emily",
+	"Andrew",
+	"Donna",
+	"Kenneth",
+	"Michelle",
+	"Joshua",
+	"Carol",
+	"Kevin",
+	"Amanda",
+	"Brian",
+	"Dorothy",
+	"George",
+	"Melissa",
+	"Edward",
+	"Deborah",
+];
+
+const lastNames = [
+	"Smith",
+	"Johnson",
+	"Williams",
+	"Brown",
+	"Jones",
+	"Garcia",
+	"Miller",
+	"Davis",
+	"Rodriguez",
+	"Martinez",
+	"Hernandez",
+	"Lopez",
+	"Gonzalez",
+	"Wilson",
+	"Anderson",
+	"Thomas",
+	"Taylor",
+	"Moore",
+	"Jackson",
+	"Martin",
+	"Lee",
+	"Perez",
+	"Thompson",
+	"White",
+	"Harris",
+	"Sanchez",
+	"Clark",
+	"Ramirez",
+	"Lewis",
+	"Robinson",
+	"Walker",
+	"Young",
+	"Allen",
+	"King",
+	"Wright",
+	"Scott",
+	"Torres",
+	"Nguyen",
+	"Hill",
+	"Flores",
+	"Green",
+	"Adams",
+	"Nelson",
+	"Baker",
+	"Hall",
+	"Rivera",
+	"Campbell",
+	"Mitchell",
+	"Carter",
+	"Roberts",
+];
+
+// Helper function to check if a name combination already exists
+function isNameUnique(fullName, currentIds) {
+	return !councilPersons.some((person) => person.name === fullName);
+}
+
 // Helper function to generate a new council person with a unique ID and random name/seniority
 function generateCouncilPerson(party, currentIds) {
-	const names = [
-		"Alex Morgan",
-		"Taylor Lee",
-		"Jordan Brown",
-		"Casey Patel",
-		"Morgan Smith",
-		"Riley Davis",
-		"Cameron Clark",
-		"Avery Lewis",
-		"Peyton Walker",
-		"Quinn Hall",
-	];
 	// Find a unique ID
 	let newId = 1;
 	while (currentIds.includes(newId)) {
 		newId++;
 	}
-	// Pick a random name
-	const name = names[Math.floor(Math.random() * names.length)];
-	// Random seniority between 1 and 15
-	const seniority = Math.floor(Math.random() * 15) + 1;
+
+	// Generate a unique name combination
+	let firstName, lastName, fullName;
+	do {
+		firstName = firstNames[Math.floor(Math.random() * firstNames.length)];
+		lastName = lastNames[Math.floor(Math.random() * lastNames.length)];
+		fullName = `${firstName} ${lastName}`;
+	} while (!isNameUnique(fullName, currentIds));
+
+	// Random seniority between 1 and 50 (increased range)
+	const seniority = Math.floor(Math.random() * 50) + 1;
 	return {
 		id: newId,
-		name,
+		name: fullName,
 		party,
 		seniority,
+		wins: 0, // Initialize wins to 0 for new council members
+		isUserCreated: false,
 	};
 }
 
+// Helper function to get next available ID
+function getNextId() {
+	return Math.max(...councilPersons.map((cp) => cp.id), 0) + 1;
+}
+
 module.exports = {
+	// Create new council person
+	createCouncilPerson: (req, res) => {
+		const { name, party, seniority } = req.body;
+
+		// Validate input
+		if (!name || !party || seniority === undefined) {
+			return res
+				.status(400)
+				.json({ message: "Name, party, and seniority are required" });
+		}
+
+		// Check if name is unique
+		if (!isNameUnique(name)) {
+			return res.status(400).json({ message: "Name must be unique" });
+		}
+
+		// Create new council person
+		const newPerson = {
+			id: getNextId(),
+			name,
+			party,
+			seniority: Math.min(Math.max(1, seniority), 50), // Ensure seniority is between 1 and 50
+			wins: 0,
+			isUserCreated: true,
+		};
+
+		councilPersons.push(newPerson);
+		res.status(201).json(newPerson);
+	},
+
 	// Get all council persons
 	getAllCouncilPersons: (req, res) => {
 		console.log("GET /api/councilperson called");
@@ -126,25 +271,34 @@ module.exports = {
 		}
 	},
 
-	// Delete council person and generate replacement
+	// Delete council person and optionally generate replacement
 	deleteAndReplace: (req, res) => {
 		const id = parseInt(req.params.id);
 		const index = councilPersons.findIndex((cp) => cp.id === id);
 
 		if (index !== -1) {
 			const deletedPerson = councilPersons[index];
-			const currentIds = councilPersons.map((cp) => cp.id);
 
-			// Generate new council person of same party
-			const newPerson = generateCouncilPerson(deletedPerson.party, currentIds);
-
-			// Replace the deleted person with the new one
-			councilPersons[index] = newPerson;
-
-			res.status(200).json({
-				deleted: deletedPerson,
-				replacement: newPerson,
-			});
+			if (deletedPerson.isUserCreated) {
+				// For user-created members, just remove them
+				councilPersons.splice(index, 1);
+				res.status(200).json({
+					deleted: deletedPerson,
+					replacement: null,
+				});
+			} else {
+				// For system-generated members, replace them
+				const currentIds = councilPersons.map((cp) => cp.id);
+				const newPerson = generateCouncilPerson(
+					deletedPerson.party,
+					currentIds
+				);
+				councilPersons[index] = newPerson;
+				res.status(200).json({
+					deleted: deletedPerson,
+					replacement: newPerson,
+				});
+			}
 		} else {
 			res.status(404).json({ message: "Council person not found" });
 		}
