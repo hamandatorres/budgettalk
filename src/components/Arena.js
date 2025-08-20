@@ -1,6 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchCouncilPersons } from "../store/slices/councilPersonSlice";
+import {
+	fetchCouncilPersons,
+	recordWin,
+	eliminateLoser,
+} from "../store/slices/councilPersonSlice";
 import { toggleModal } from "../store/slices/uiSlice";
 import { setBattleResult } from "../store/slices/battleSlice";
 import AddCouncilPersonModal from "./AddCouncilPersonModal";
@@ -96,6 +100,7 @@ const Arena = () => {
 									>
 										<h3>{person.name}</h3>
 										<p>Seniority: {person.seniority}</p>
+										<p>Wins: {person.wins || 0}</p>
 									</div>
 								))}
 							</div>
@@ -117,6 +122,7 @@ const Arena = () => {
 									<h3>{selectedFighter1.name}</h3>
 									<p>{selectedFighter1.party}</p>
 									<p>Seniority: {selectedFighter1.seniority}</p>
+									<p>Wins: {selectedFighter1.wins || 0}</p>
 								</>
 							) : (
 								<p>Select Fighter 1</p>
@@ -134,6 +140,7 @@ const Arena = () => {
 									<h3>{selectedFighter2.name}</h3>
 									<p>{selectedFighter2.party}</p>
 									<p>Seniority: {selectedFighter2.seniority}</p>
+									<p>Wins: {selectedFighter2.wins || 0}</p>
 								</>
 							) : (
 								<p>Select Fighter 2</p>
@@ -150,7 +157,28 @@ const Arena = () => {
 								selectedFighter1,
 								selectedFighter2
 							);
+
+							// Record the battle result
 							dispatch(setBattleResult(result));
+
+							// Record win for the winner
+							dispatch(recordWin(result.winner.id));
+
+							// Handle elimination of the loser
+							const loser =
+								result.winner.id === selectedFighter1.id
+									? selectedFighter2
+									: selectedFighter1;
+							dispatch(
+								eliminateLoser({
+									loserId: loser.id,
+									partyName: loser.party,
+								})
+							);
+
+							// Clear the fighters after battle
+							setSelectedFighter1(null);
+							setSelectedFighter2(null);
 						}}
 					/>
 				)}

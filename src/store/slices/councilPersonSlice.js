@@ -2,16 +2,23 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import { defaultCouncilPersons } from "../../data/defaultCouncilPersons";
 
+// Create axios instance
 const axiosInstance = axios.create({
 	baseURL:
 		process.env.REACT_APP_API_URL ||
 		"https://evening-cliffs-17109-56706eeb61a8.herokuapp.com",
-	headers: {
-		"Content-Type": "application/json",
-	},
+	headers: { "Content-Type": "application/json" },
 });
 
-export const fetchCouncilPersons = createAsyncThunk(
+// Initial state
+const initialState = {
+	list: [],
+	loading: false,
+	error: null,
+};
+
+// Thunk actions
+const fetchCouncilPersons = createAsyncThunk(
 	"councilPerson/fetchAll",
 	async () => {
 		const response = await axiosInstance.get("/api/councilperson");
@@ -19,7 +26,7 @@ export const fetchCouncilPersons = createAsyncThunk(
 	}
 );
 
-export const createCouncilPerson = createAsyncThunk(
+const createCouncilPerson = createAsyncThunk(
 	"councilPerson/create",
 	async (formData) => {
 		const response = await axiosInstance.post("/api/councilperson", formData);
@@ -27,7 +34,7 @@ export const createCouncilPerson = createAsyncThunk(
 	}
 );
 
-export const updateCouncilPerson = createAsyncThunk(
+const updateCouncilPerson = createAsyncThunk(
 	"councilPerson/update",
 	async ({ id, data }) => {
 		const response = await axiosInstance.put(`/api/councilperson/${id}`, data);
@@ -35,7 +42,7 @@ export const updateCouncilPerson = createAsyncThunk(
 	}
 );
 
-export const deleteAndReplaceCouncilPerson = createAsyncThunk(
+const deleteAndReplaceCouncilPerson = createAsyncThunk(
 	"councilPerson/deleteAndReplace",
 	async (id) => {
 		const response = await axiosInstance.delete(`/api/councilperson/${id}`);
@@ -43,17 +50,29 @@ export const deleteAndReplaceCouncilPerson = createAsyncThunk(
 	}
 );
 
+// Create slice
 const councilPersonSlice = createSlice({
 	name: "councilPerson",
-	initialState: {
-		list: [],
-		loading: false,
-		error: null,
+	initialState,
+	reducers: {
+		recordWin(state, action) {
+			const winner = state.list.find((cp) => cp.id === action.payload);
+			if (winner) {
+				winner.wins = (winner.wins || 0) + 1;
+			}
+		},
+		eliminateLoser(state, action) {
+			const { loserId, partyName } = action.payload || {};
+			if (!loserId || !partyName) return;
+
+			const partyMembers = state.list.filter((cp) => cp.party === partyName);
+			if (partyMembers.length <= 2) return;
+
+			state.list = state.list.filter((cp) => cp.id !== loserId);
+		},
 	},
-	reducers: {},
 	extraReducers: (builder) => {
 		builder
-			// Fetch council persons
 			.addCase(fetchCouncilPersons.pending, (state) => {
 				state.loading = true;
 			})
@@ -65,21 +84,17 @@ const councilPersonSlice = createSlice({
 			.addCase(fetchCouncilPersons.rejected, (state, action) => {
 				state.loading = false;
 				state.error = action.error.message;
-				// Use default data when API is not available
 				state.list = defaultCouncilPersons;
 			})
-			// Create council person
 			.addCase(createCouncilPerson.fulfilled, (state, action) => {
 				state.list.push(action.payload);
 			})
-			// Update council person
 			.addCase(updateCouncilPerson.fulfilled, (state, action) => {
 				const index = state.list.findIndex((cp) => cp.id === action.payload.id);
 				if (index !== -1) {
 					state.list[index] = action.payload;
 				}
 			})
-			// Delete and replace council person
 			.addCase(deleteAndReplaceCouncilPerson.fulfilled, (state, action) => {
 				const index = state.list.findIndex(
 					(cp) => cp.id === action.payload.deleted.id
@@ -95,4 +110,13 @@ const councilPersonSlice = createSlice({
 	},
 });
 
+// Exports
+export {
+	fetchCouncilPersons,
+	createCouncilPerson,
+	updateCouncilPerson,
+	deleteAndReplaceCouncilPerson,
+};
+
+export const { recordWin, eliminateLoser } = councilPersonSlice.actions;
 export default councilPersonSlice.reducer;
