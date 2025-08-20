@@ -21,41 +21,47 @@ const slice = createSlice({
 			},
 		},
 		eliminateLoser: {
-			prepare: (loserId, partyName) => ({ payload: { loserId, partyName } }),
+			prepare: (payload) => ({ payload }),
 			reducer(state, { payload }) {
 				if (!payload?.loserId || !payload?.partyName) return;
-				const partySize = state.list.filter(
+				const partyMembers = state.list.filter(
 					(p) => p.party === payload.partyName
-				).length;
-				if (partySize > 2) {
+				);
+
+				// Only eliminate if there are more than 2 members in the party
+				if (partyMembers.length > 2) {
 					state.list = state.list.filter((p) => p.id !== payload.loserId);
+				} else {
+					console.log(
+						`Cannot eliminate member - party ${payload.partyName} only has ${partyMembers.length} members`
+					);
 				}
 			},
 		},
 	},
 	extraReducers: (builder) => {
 		builder
-			.addCase("councilPerson/fetchAll/pending", (state) => {
+			.addCase(fetchCouncilPersons.pending, (state) => {
 				state.loading = true;
 			})
-			.addCase("councilPerson/fetchAll/fulfilled", (state, action) => {
+			.addCase(fetchCouncilPersons.fulfilled, (state, action) => {
 				state.loading = false;
 				state.list = action.payload;
 				state.error = null;
 			})
-			.addCase("councilPerson/fetchAll/rejected", (state, action) => {
+			.addCase(fetchCouncilPersons.rejected, (state, action) => {
 				state.loading = false;
 				state.error = action.error.message;
 				state.list = defaultCouncilPersons;
 			})
-			.addCase("councilPerson/create/fulfilled", (state, action) => {
+			.addCase(createCouncilPerson.fulfilled, (state, action) => {
 				state.list.push(action.payload);
 			})
-			.addCase("councilPerson/update/fulfilled", (state, action) => {
+			.addCase(updateCouncilPerson.fulfilled, (state, action) => {
 				const idx = state.list.findIndex((p) => p.id === action.payload.id);
 				if (idx >= 0) state.list[idx] = action.payload;
 			})
-			.addCase("councilPerson/deleteAndReplace/fulfilled", (state, action) => {
+			.addCase(deleteAndReplaceCouncilPerson.fulfilled, (state, action) => {
 				const idx = state.list.findIndex(
 					(p) => p.id === action.payload.deleted.id
 				);
