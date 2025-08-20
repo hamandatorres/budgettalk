@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
+import { defaultCouncilPersons } from "../../data/defaultCouncilPersons";
 
 const axiosInstance = axios.create({
 	baseURL:
@@ -64,6 +65,8 @@ const councilPersonSlice = createSlice({
 			.addCase(fetchCouncilPersons.rejected, (state, action) => {
 				state.loading = false;
 				state.error = action.error.message;
+				// Use default data when API is not available
+				state.list = defaultCouncilPersons;
 			})
 			// Create council person
 			.addCase(createCouncilPerson.fulfilled, (state, action) => {

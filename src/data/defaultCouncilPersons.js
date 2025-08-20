@@ -1,0 +1,42 @@
+export const defaultCouncilPersons = [
+	{
+		id: 1,
+		name: "Sarah Johnson",
+		party: "Progressive",
+		seniority: 8,
+		wins: 0,
+		isUserCreated: false,
+	},
+	{
+		id: 2,
+		name: "Michael Chen",
+		party: "Conservative",
+		seniority: 4,
+		wins: 0,
+		isUserCreated: false,
+	},
+	{
+		id: 3,
+		name: "Diana Rodriguez",
+		party: "Moderate",
+		seniority: 6,
+		wins: 0,
+		isUserCreated: false,
+	},
+	{
+		id: 4,
+		name: "James Wilson",
+		party: "Independent",
+		seniority: 12,
+		wins: 0,
+		isUserCreated: false,
+	},
+	{
+		id: 5,
+		name: "Maria Garcia",
+		party: "Green",
+		seniority: 10,
+		wins: 0,
+		isUserCreated: false,
+	},
+];
