@@ -133,11 +133,13 @@ store/
 ### State Management
 
 - **Council Person State**
+
   - List of all council members
   - Loading and error states
   - CRUD operations through async thunks
 
 - **Battle State**
+
   - Selected fighters
   - Winner information
   - Battle details and scoring
@@ -188,10 +190,13 @@ App
 ### Redux Action Flow
 
 1. **Council Member Management**
+
    ```
    User Action → Redux Action → API Call → Update Store → UI Update
    ```
+
    Example: Adding a new council member
+
    - User submits form
    - `createCouncilPerson` thunk dispatched
    - API call to create member
