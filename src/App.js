@@ -7,9 +7,7 @@ export default function App() {
 	return (
 		<div className="App">
 			<h1 className="main-title">Budget Talk Showdown</h1>
-			<div
-				style={{ padding: "20px", backgroundColor: "#f0f0f0", margin: "20px" }}
-			>
+			<div className="debug-info">
 				<p>Debug Info:</p>
 				<p>React Version: {React.version}</p>
 				<p>Environment: {process.env.NODE_ENV}</p>

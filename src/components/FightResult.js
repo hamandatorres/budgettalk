@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import { useSelector } from "react-redux";
 import "./FightResult.css";
 
@@ -38,6 +39,22 @@ const FightResult = ({ fighter1, fighter2, onBattle }) => {
 			)}
 		</div>
 	);
+};
+
+FightResult.propTypes = {
+	fighter1: PropTypes.shape({
+		id: PropTypes.number.isRequired,
+		name: PropTypes.string.isRequired,
+		party: PropTypes.string.isRequired,
+		seniority: PropTypes.number.isRequired,
+	}).isRequired,
+	fighter2: PropTypes.shape({
+		id: PropTypes.number.isRequired,
+		name: PropTypes.string.isRequired,
+		party: PropTypes.string.isRequired,
+		seniority: PropTypes.number.isRequired,
+	}).isRequired,
+	onBattle: PropTypes.func.isRequired,
 };
 
 export default FightResult;
