@@ -62,38 +62,180 @@ const councilPersons = [
 	},
 ];
 
+// Arrays for name generation
+const firstNames = [
+	"James",
+	"Mary",
+	"John",
+	"Patricia",
+	"Robert",
+	"Jennifer",
+	"Michael",
+	"Linda",
+	"William",
+	"Elizabeth",
+	"David",
+	"Barbara",
+	"Richard",
+	"Susan",
+	"Joseph",
+	"Jessica",
+	"Thomas",
+	"Sarah",
+	"Charles",
+	"Karen",
+	"Christopher",
+	"Nancy",
+	"Daniel",
+	"Lisa",
+	"Matthew",
+	"Betty",
+	"Anthony",
+	"Margaret",
+	"Donald",
+	"Sandra",
+	"Mark",
+	"Ashley",
+	"Paul",
+	"Kimberly",
+	"Steven",
+	"Emily",
+	"Andrew",
+	"Donna",
+	"Kenneth",
+	"Michelle",
+	"Joshua",
+	"Carol",
+	"Kevin",
+	"Amanda",
+	"Brian",
+	"Dorothy",
+	"George",
+	"Melissa",
+	"Edward",
+	"Deborah",
+];
+
+const lastNames = [
+	"Smith",
+	"Johnson",
+	"Williams",
+	"Brown",
+	"Jones",
+	"Garcia",
+	"Miller",
+	"Davis",
+	"Rodriguez",
+	"Martinez",
+	"Hernandez",
+	"Lopez",
+	"Gonzalez",
+	"Wilson",
+	"Anderson",
+	"Thomas",
+	"Taylor",
+	"Moore",
+	"Jackson",
+	"Martin",
+	"Lee",
+	"Perez",
+	"Thompson",
+	"White",
+	"Harris",
+	"Sanchez",
+	"Clark",
+	"Ramirez",
+	"Lewis",
+	"Robinson",
+	"Walker",
+	"Young",
+	"Allen",
+	"King",
+	"Wright",
+	"Scott",
+	"Torres",
+	"Nguyen",
+	"Hill",
+	"Flores",
+	"Green",
+	"Adams",
+	"Nelson",
+	"Baker",
+	"Hall",
+	"Rivera",
+	"Campbell",
+	"Mitchell",
+	"Carter",
+	"Roberts",
+];
+
+// Helper function to check if a name combination already exists
+function isNameUnique(fullName, currentIds) {
+	return !councilPersons.some((person) => person.name === fullName);
+}
+
 // Helper function to generate a new council person with a unique ID and random name/seniority
 function generateCouncilPerson(party, currentIds) {
-	const names = [
-		"Alex Morgan",
-		"Taylor Lee",
-		"Jordan Brown",
-		"Casey Patel",
-		"Morgan Smith",
-		"Riley Davis",
-		"Cameron Clark",
-		"Avery Lewis",
-		"Peyton Walker",
-		"Quinn Hall",
-	];
 	// Find a unique ID
 	let newId = 1;
 	while (currentIds.includes(newId)) {
 		newId++;
 	}
-	// Pick a random name
-	const name = names[Math.floor(Math.random() * names.length)];
-	// Random seniority between 1 and 15
-	const seniority = Math.floor(Math.random() * 15) + 1;
+
+	// Generate a unique name combination
+	let firstName, lastName, fullName;
+	do {
+		firstName = firstNames[Math.floor(Math.random() * firstNames.length)];
+		lastName = lastNames[Math.floor(Math.random() * lastNames.length)];
+		fullName = `${firstName} ${lastName}`;
+	} while (!isNameUnique(fullName, currentIds));
+
+	// Random seniority between 1 and 50 (increased range)
+	const seniority = Math.floor(Math.random() * 50) + 1;
 	return {
 		id: newId,
-		name,
+		name: fullName,
 		party,
 		seniority,
+		wins: 0, // Initialize wins to 0 for new council members
 	};
 }
 
+// Helper function to get next available ID
+function getNextId() {
+	return Math.max(...councilPersons.map((cp) => cp.id), 0) + 1;
+}
+
 module.exports = {
+	// Create new council person
+	createCouncilPerson: (req, res) => {
+		const { name, party, seniority } = req.body;
+
+		// Validate input
+		if (!name || !party || seniority === undefined) {
+			return res
+				.status(400)
+				.json({ message: "Name, party, and seniority are required" });
+		}
+
+		// Check if name is unique
+		if (!isNameUnique(name)) {
+			return res.status(400).json({ message: "Name must be unique" });
+		}
+
+		// Create new council person
+		const newPerson = {
+			id: getNextId(),
+			name,
+			party,
+			seniority: Math.min(Math.max(1, seniority), 50), // Ensure seniority is between 1 and 50
+			wins: 0,
+		};
+
+		councilPersons.push(newPerson);
+		res.status(201).json(newPerson);
+	},
+
 	// Get all council persons
 	getAllCouncilPersons: (req, res) => {
 		console.log("GET /api/councilperson called");
