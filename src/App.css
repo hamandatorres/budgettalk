@@ -1,5 +1,12 @@
 @import url("https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap");
 
+/* Support for modern forced-colors mode */
+@media (forced-colors: active) {
+	* {
+		forced-color-adjust: none;
+	}
+}
+
 .App {
 	text-align: center;
 	min-height: 100vh;
@@ -25,4 +32,24 @@
 	margin: 20px auto;
 	max-width: 800px;
 	box-shadow: 4px 4px 0 #000;
+}
+
+.main-content {
+	display: flex;
+	gap: 24px;
+	max-width: 1200px;
+	margin: 0 auto;
+	padding: 20px;
+	justify-content: center;
+	align-items: flex-start;
+}
+
+/* Make sure Arena takes up most of the space */
+.main-content > :first-child {
+	flex: 1;
+}
+
+/* Leaderboard has fixed width */
+.main-content > :last-child {
+	flex-shrink: 0;
 }

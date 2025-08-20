@@ -1,5 +1,6 @@
 import React from "react";
 import Arena from "./components/Arena";
+import Leaderboard from "./components/Leaderboard";
 import "./App.css";
 
 export default function App() {
@@ -13,7 +14,10 @@ export default function App() {
 				<p>Environment: {process.env.NODE_ENV}</p>
 				<p>Base URL: {process.env.PUBLIC_URL}</p>
 			</div>
-			<Arena />
+			<div className="main-content">
+				<Arena />
+				<Leaderboard />
+			</div>
 		</div>
 	);
 }
