@@ -5,6 +5,7 @@ const councilPersons = [
 		name: "Sarah Johnson",
 		party: "Progressive",
 		seniority: 8,
+		isUserCreated: false,
 	},
 	{
 		id: 2,
@@ -198,6 +199,7 @@ function generateCouncilPerson(party, currentIds) {
 		party,
 		seniority,
 		wins: 0, // Initialize wins to 0 for new council members
+		isUserCreated: false,
 	};
 }
 
@@ -230,6 +232,7 @@ module.exports = {
 			party,
 			seniority: Math.min(Math.max(1, seniority), 50), // Ensure seniority is between 1 and 50
 			wins: 0,
+			isUserCreated: true,
 		};
 
 		councilPersons.push(newPerson);
@@ -268,25 +271,34 @@ module.exports = {
 		}
 	},
 
-	// Delete council person and generate replacement
+	// Delete council person and optionally generate replacement
 	deleteAndReplace: (req, res) => {
 		const id = parseInt(req.params.id);
 		const index = councilPersons.findIndex((cp) => cp.id === id);
 
 		if (index !== -1) {
 			const deletedPerson = councilPersons[index];
-			const currentIds = councilPersons.map((cp) => cp.id);
 
-			// Generate new council person of same party
-			const newPerson = generateCouncilPerson(deletedPerson.party, currentIds);
-
-			// Replace the deleted person with the new one
-			councilPersons[index] = newPerson;
-
-			res.status(200).json({
-				deleted: deletedPerson,
-				replacement: newPerson,
-			});
+			if (deletedPerson.isUserCreated) {
+				// For user-created members, just remove them
+				councilPersons.splice(index, 1);
+				res.status(200).json({
+					deleted: deletedPerson,
+					replacement: null,
+				});
+			} else {
+				// For system-generated members, replace them
+				const currentIds = councilPersons.map((cp) => cp.id);
+				const newPerson = generateCouncilPerson(
+					deletedPerson.party,
+					currentIds
+				);
+				councilPersons[index] = newPerson;
+				res.status(200).json({
+					deleted: deletedPerson,
+					replacement: newPerson,
+				});
+			}
 		} else {
 			res.status(404).json({ message: "Council person not found" });
 		}
