@@ -36,11 +36,11 @@ class ErrorBoundary extends React.Component {
 }
 
 console.log("Starting application initialization...");
-const container = document.getElementById("root");
-console.log("Root container found:", container);
+const appRootContainer = document.getElementById("root");
+console.log("Root container found:", appRootContainer);
 
 try {
-	const root = createRoot(container);
+	const root = createRoot(appRootContainer);
 	console.log("React root created successfully");
 
 	root.render(
