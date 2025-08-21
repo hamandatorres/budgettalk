@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import { defaultCouncilPersons } from "../../data/defaultCouncilPersons";
+import { POLITICAL_ICONS } from "../../data/politicalIcons";
 
 const axiosInstance = axios.create({
 	baseURL:
@@ -82,7 +83,17 @@ const slice = createSlice({
 			})
 			.addCase(fetchCouncilPersons.fulfilled, (state, action) => {
 				state.loading = false;
-				state.list = action.payload;
+				// Assign random avatars to members who don't have one
+				state.list = action.payload.map((person) => {
+					if (!person.avatarId) {
+						const randomIcon =
+							POLITICAL_ICONS[
+								Math.floor(Math.random() * POLITICAL_ICONS.length)
+							];
+						return { ...person, avatarId: randomIcon.id };
+					}
+					return person;
+				});
 				state.error = null;
 			})
 			.addCase(fetchCouncilPersons.rejected, (state, action) => {

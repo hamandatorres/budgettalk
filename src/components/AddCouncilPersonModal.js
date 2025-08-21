@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import "./AddCouncilPersonModal.css";
 import { createCouncilPerson } from "../store/slices/councilPersonSlice";
 import { toggleModal } from "../store/slices/uiSlice";
+import { POLITICAL_ICONS } from "../data/politicalIcons";
 
 const AddCouncilPersonModal = () => {
 	const dispatch = useDispatch();
@@ -12,6 +13,7 @@ const AddCouncilPersonModal = () => {
 		name: "",
 		party: "Progressive",
 		seniority: 1,
+		avatarId: POLITICAL_ICONS[0].id,
 	});
 
 	const parties = [
@@ -27,7 +29,12 @@ const AddCouncilPersonModal = () => {
 		try {
 			await dispatch(createCouncilPerson(formData)).unwrap();
 			dispatch(toggleModal());
-			setFormData({ name: "", party: "Progressive", seniority: 1 });
+			setFormData({
+				name: "",
+				party: "Progressive",
+				seniority: 1,
+				avatarId: POLITICAL_ICONS[0].id,
+			});
 		} catch (error) {
 			console.error("Error adding council person:", error);
 			alert(error.response?.data?.message || "Error adding council person");
@@ -93,6 +100,27 @@ const AddCouncilPersonModal = () => {
 							onChange={handleChange}
 							required
 						/>
+					</div>
+
+					<div className="form-group">
+						<label htmlFor="avatarId">Avatar:</label>
+						<div className="avatar-selection">
+							{POLITICAL_ICONS.map((icon) => (
+								<button
+									key={icon.id}
+									type="button"
+									className={`avatar-option ${
+										formData.avatarId === icon.id ? "selected" : ""
+									}`}
+									onClick={() =>
+										setFormData((prev) => ({ ...prev, avatarId: icon.id }))
+									}
+								>
+									<span className="icon">{icon.symbol}</span>
+									<span className="icon-name">{icon.name}</span>
+								</button>
+							))}
+						</div>
 					</div>
 
 					<div className="modal-buttons">

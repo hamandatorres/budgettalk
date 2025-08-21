@@ -152,8 +152,32 @@ h2 {
 	cursor: grabbing;
 }
 
+.council-person-header {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	margin-bottom: 10px;
+}
+
+.council-avatar {
+	font-size: 20px;
+	min-width: 32px;
+	height: 32px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	border: 2px solid #000;
+	background: #fff;
+	box-shadow: 2px 2px 0 #000;
+}
+
+.selected .council-avatar {
+	border-color: #fff;
+	box-shadow: 2px 2px 0 #fff;
+}
+
 .council-person h3 {
-	margin: 0 0 10px 0;
+	margin: 0;
 	font-size: 12px;
 	text-transform: uppercase;
 }

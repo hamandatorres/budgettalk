@@ -9,6 +9,7 @@ import {
 import { toggleModal } from "../store/slices/uiSlice";
 import { setBattleResult } from "../store/slices/battleSlice";
 import { setSelectedMember } from "../store/slices/selectionSlice";
+import { POLITICAL_ICONS } from "../data/politicalIcons";
 import AddCouncilPersonModal from "./AddCouncilPersonModal";
 import FightResult from "./FightResult";
 import "./Arena.css";

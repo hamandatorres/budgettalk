@@ -1,6 +1,7 @@
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { setSelectedMember } from "../store/slices/selectionSlice";
+import { POLITICAL_ICONS } from "../data/politicalIcons";
 import "./Leaderboard.css";
 
 const Leaderboard = () => {
@@ -34,13 +35,19 @@ const Leaderboard = () => {
 						onClick={() => handleMemberClick(member.id)}
 					>
 						<div className="member-info">
-							<span className="member-name">{member.name}</span>
-							<span
-								className="member-party"
-								style={{ color: member.party.toLowerCase() }}
-							>
-								{member.party}
+							<span className="member-avatar">
+								{POLITICAL_ICONS.find((icon) => icon.id === member.avatarId)
+									?.symbol || "👤"}
 							</span>
+							<div className="member-details">
+								<span className="member-name">{member.name}</span>
+								<span
+									className="member-party"
+									style={{ color: member.party.toLowerCase() }}
+								>
+									{member.party}
+								</span>
+							</div>
 						</div>
 						<div className="member-stats">
 							<span className="wins-count">Wins: {member.wins || 0}</span>
