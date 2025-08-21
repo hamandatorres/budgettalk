@@ -166,9 +166,23 @@
 /* New selectors to match the actual HTML structure */
 .versus-container {
 	display: flex;
-	justify-content: space-between;
-	align-items: center;
+	align-items: stretch;
 	margin: var(--spacing-lg) 0;
+	position: relative;
+}
+
+.challenger {
+	flex: 1;
+	display: flex;
+	align-items: stretch;
+}
+
+.challenger:first-child {
+	margin-right: var(--spacing-lg);
+}
+
+.challenger:last-child {
+	margin-left: var(--spacing-lg);
 }
 
 .arena-fighter,
@@ -178,7 +192,11 @@
 	padding: var(--spacing-md);
 	background: var(--color-secondary);
 	border: var(--border-width) var(--border-style) var(--color-border);
-	margin: 0 var(--spacing-sm);
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	min-height: var(--spacing-xxl);
 }
 
 .arena-fighter h3,
@@ -199,6 +217,15 @@
 .vs {
 	font-family: var(--font-primary);
 	font-size: var(--font-size-xl);
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%, -50%);
+	background: var(--color-secondary);
+	border: var(--border-width) var(--border-style) var(--color-border);
+	padding: var(--spacing-sm) var(--spacing-md);
+	z-index: 10;
+	box-shadow: var(--shadow-offset) var(--shadow-offset) 0 var(--color-shadow);
 }
 
 .arena-fighter.empty,
@@ -208,10 +235,14 @@
 	padding: var(--spacing-md);
 	background: var(--color-secondary);
 	border: var(--border-width) var(--border-style-dashed) var(--color-border);
-	margin: 0 var(--spacing-sm);
 	color: var(--color-text);
 	font-family: var(--font-primary);
 	font-size: var(--font-size-sm);
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	min-height: var(--spacing-xxl);
 }
 
 .arena-fighter.empty p,
