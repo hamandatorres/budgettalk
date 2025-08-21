@@ -3,6 +3,7 @@ import councilPersonReducer from "./slices/councilPersonSlice";
 import battleReducer from "./slices/battleSlice";
 import uiReducer from "./slices/uiSlice";
 import selectionReducer from "./slices/selectionSlice";
+import notificationReducer from "./slices/notificationSlice";
 
 export const store = configureStore({
 	reducer: {
@@ -10,6 +11,7 @@ export const store = configureStore({
 		battle: battleReducer,
 		ui: uiReducer,
 		selection: selectionReducer,
+		notifications: notificationReducer,
 	},
 	middleware: (getDefaultMiddleware) =>
 		getDefaultMiddleware({

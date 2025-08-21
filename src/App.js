@@ -1,23 +1,26 @@
 import React from "react";
 import Arena from "./components/Arena";
 import Leaderboard from "./components/Leaderboard";
+import NotificationSystem from "./components/NotificationSystem";
+import { Provider } from "react-redux";
+import { store } from "./store";
 import "./App.css";
 
 export default function App() {
-	console.log("App component rendering");
 	return (
-		<div className="App">
-			<h1 className="main-title">Budget Talk Showdown</h1>
-			<div className="debug-info">
-				<p>Debug Info:</p>
-				<p>React Version: {React.version}</p>
-				<p>Environment: {process.env.NODE_ENV}</p>
-				<p>Base URL: {process.env.PUBLIC_URL}</p>
+		<Provider store={store}>
+			<div className="App">
+				<h1>Budget Talk Showdown</h1>
+				<div className="content">
+					<div className="arena-section">
+						<Arena />
+					</div>
+					<div className="leaderboard-section">
+						<Leaderboard />
+					</div>
+				</div>
+				<NotificationSystem />
 			</div>
-			<div className="main-content">
-				<Arena />
-				<Leaderboard />
-			</div>
-		</div>
+		</Provider>
 	);
 }

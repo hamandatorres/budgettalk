@@ -49,7 +49,7 @@ FightResult.propTypes = {
 		seniority: PropTypes.number.isRequired,
 	}).isRequired,
 	fighter2: PropTypes.shape({
-		id: PropTypes.number.isRequired,
+		id: PropTypes.string.isRequired,
 		name: PropTypes.string.isRequired,
 		party: PropTypes.string.isRequired,
 		seniority: PropTypes.number.isRequired,

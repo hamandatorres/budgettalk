@@ -1,13 +1,18 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import "./AddCouncilPersonModal.css";
 import { createCouncilPerson } from "../store/slices/councilPersonSlice";
 import { toggleModal } from "../store/slices/uiSlice";
+import {
+	createSuccessNotification,
+	createErrorNotification,
+} from "../store/slices/notificationSlice";
 import { POLITICAL_ICONS } from "../data/politicalIcons";
+import "./AddCouncilPersonModal.css";
 
 const AddCouncilPersonModal = () => {
 	const dispatch = useDispatch();
 	const isOpen = useSelector((state) => state.ui.isModalOpen);
+	const { createLoading } = useSelector((state) => state.councilPerson);
 
 	const [formData, setFormData] = useState({
 		name: "",
@@ -29,6 +34,9 @@ const AddCouncilPersonModal = () => {
 		try {
 			await dispatch(createCouncilPerson(formData)).unwrap();
 			dispatch(toggleModal());
+			dispatch(
+				createSuccessNotification(`${formData.name} has joined the council!`)
+			);
 			setFormData({
 				name: "",
 				party: "Progressive",
@@ -37,7 +45,11 @@ const AddCouncilPersonModal = () => {
 			});
 		} catch (error) {
 			console.error("Error adding council person:", error);
-			alert(error.response?.data?.message || "Error adding council person");
+			dispatch(
+				createErrorNotification(
+					error.message || "Failed to add council member. Please try again."
+				)
+			);
 		}
 	};
 
@@ -124,13 +136,18 @@ const AddCouncilPersonModal = () => {
 					</div>
 
 					<div className="modal-buttons">
-						<button type="submit" className="save-button">
-							Save
+						<button
+							type="submit"
+							className="save-button"
+							disabled={createLoading}
+						>
+							{createLoading ? "Adding..." : "Save"}
 						</button>
 						<button
 							type="button"
 							className="cancel-button"
 							onClick={() => dispatch(toggleModal())}
+							disabled={createLoading}
 						>
 							Cancel
 						</button>

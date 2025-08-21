@@ -1,30 +1,32 @@
 .fight-result {
-	margin-top: 20px;
+	margin-top: var(--spacing-lg);
 	text-align: center;
-	font-family: "Press Start 2P", cursive;
+	font-family: var(--font-primary);
 }
 
 .battle-button {
-	background: #000;
-	color: #fff;
+	background: var(--color-primary);
+	color: var(--color-text-inverse);
 	border: none;
-	padding: 15px 30px;
-	font-family: "Press Start 2P", cursive;
-	font-size: 20px;
+	padding: var(--spacing-md) var(--spacing-xl);
+	font-family: var(--font-primary);
+	font-size: var(--font-size-lg);
 	cursor: pointer;
-	transition: all 0.1s step-end;
+	transition: var(--transition-fast);
 	position: relative;
-	box-shadow: 4px 4px 0 #666;
+	box-shadow: var(--shadow-offset) var(--shadow-offset) 0 var(--color-shadow);
 }
 
 .battle-button:hover:not(.disabled) {
 	transform: translate(-2px, -2px);
-	box-shadow: 6px 6px 0 #666;
+	box-shadow: var(--shadow-hover-offset) var(--shadow-hover-offset) 0
+		var(--color-shadow);
 }
 
 .battle-button:active:not(.disabled) {
 	transform: translate(2px, 2px);
-	box-shadow: 2px 2px 0 #666;
+	box-shadow: var(--shadow-small-offset) var(--shadow-small-offset) 0
+		var(--color-shadow);
 }
 
 .battle-button.disabled {
@@ -34,47 +36,45 @@
 }
 
 .winner-display {
-	margin-top: 20px;
+	margin-top: var(--spacing-lg);
 }
 
 .winner-text {
-	font-size: 24px;
-	color: #000;
-	margin-bottom: 10px;
-	font-weight: bold;
+	font-size: var(--font-size-xxl);
+	color: var(--color-text);
+	margin-bottom: var(--spacing-sm);
 }
 
 .winner-name {
-	font-size: 18px;
-	margin-bottom: 10px;
+	font-size: var(--font-size-xl);
+	margin-bottom: var(--spacing-sm);
 }
 
 .battle-details {
-	margin: 15px 0;
-	font-size: 12px;
+	margin: var(--spacing-md) 0;
+	font-size: var(--font-size-md);
 }
 
 .battle-point {
-	margin: 8px 0;
+	margin: var(--spacing-sm) 0;
 	display: flex;
 	justify-content: space-between;
-	gap: 10px;
+	gap: var(--spacing-sm);
 }
 
 .category {
-	color: #666;
+	color: var(--color-text);
 }
 
 .point-winner {
-	color: #000;
-	font-weight: bold;
+	color: var(--color-text);
 }
 
 .final-score {
-	margin-top: 15px;
-	font-size: 14px;
-	border-top: 2px dashed #000;
-	padding-top: 10px;
+	margin-top: var(--spacing-md);
+	font-size: var(--font-size-lg);
+	border-top: var(--border-width) var(--border-style-dashed) var(--color-border);
+	padding-top: var(--spacing-sm);
 }
 
 @keyframes winner-appear {

@@ -5,20 +5,24 @@ import {
 	recordWin,
 	eliminateLoser,
 	startNewSession,
+	clearError,
 } from "../store/slices/councilPersonSlice";
 import { toggleModal } from "../store/slices/uiSlice";
-import { setBattleResult } from "../store/slices/battleSlice";
+import { setBattleResult, startBattle } from "../store/slices/battleSlice";
 import { setSelectedMember } from "../store/slices/selectionSlice";
-import { POLITICAL_ICONS } from "../data/politicalIcons";
+import {
+	createSuccessNotification,
+	createErrorNotification,
+	createInfoNotification,
+} from "../store/slices/notificationSlice";
 import AddCouncilPersonModal from "./AddCouncilPersonModal";
 import FightResult from "./FightResult";
 import "./Arena.css";
 
 const Arena = () => {
 	const dispatch = useDispatch();
-	const { list, loading, error } = useSelector((state) => state.councilPerson);
-	const selectedMemberId = useSelector(
-		(state) => state.selection.selectedMemberId
+	const { list, loading, error, createLoading } = useSelector(
+		(state) => state.councilPerson
 	);
 	const [expandedParty, setExpandedParty] = useState(null);
 	const [selectedFighter1, setSelectedFighter1] = useState(null);
@@ -29,8 +33,26 @@ const Arena = () => {
 		dispatch(fetchCouncilPersons());
 	}, [dispatch]);
 
+	// Handle errors with notifications
+	useEffect(() => {
+		if (error) {
+			dispatch(createErrorNotification(error.message || "An error occurred"));
+			// Clear error after showing notification
+			setTimeout(() => dispatch(clearError()), 100);
+		}
+	}, [error, dispatch]);
+
+	// Show loading notification for create operations
+	useEffect(() => {
+		if (createLoading) {
+			dispatch(createInfoNotification("Adding council member..."));
+		}
+	}, [createLoading, dispatch]);
+
 	if (loading) {
-		return <div className="arena-container">Loading...</div>;
+		return (
+			<div style={{ padding: "20px", textAlign: "center" }}>Loading...</div>
+		);
 	}
 
 	if (error) {
@@ -147,6 +169,11 @@ const Arena = () => {
 									className="confirm-button"
 									onClick={() => {
 										dispatch(startNewSession());
+										dispatch(
+											createSuccessNotification(
+												"New session started! Only top 2 members from each party remain."
+											)
+										);
 										setShowConfirmDialog(false);
 										setSelectedFighter1(null);
 										setSelectedFighter2(null);
@@ -207,13 +234,23 @@ const Arena = () => {
 						fighter1={selectedFighter1}
 						fighter2={selectedFighter2}
 						onBattle={() => {
+							// Start battle
+							dispatch(startBattle());
+							dispatch(createInfoNotification("Battle starting..."));
+
 							const result = determineBattleWinner(
 								selectedFighter1,
 								selectedFighter2
 							);
 
-							// Record the battle result
-							dispatch(setBattleResult(result));
+							// Record the battle result with fighter data
+							dispatch(
+								setBattleResult({
+									...result,
+									fighter1: selectedFighter1,
+									fighter2: selectedFighter2,
+								})
+							);
 
 							// Record win for the winner
 							dispatch(recordWin(result.winner.id));
@@ -230,9 +267,17 @@ const Arena = () => {
 								})
 							);
 
+							// Show battle result notification
+							dispatch(
+								createSuccessNotification(
+									`${result.winner.name} wins the budget debate!`
+								)
+							);
+
 							// Clear the fighters after battle
 							setSelectedFighter1(null);
 							setSelectedFighter2(null);
+							dispatch(setSelectedMember(null));
 						}}
 					/>
 				)}

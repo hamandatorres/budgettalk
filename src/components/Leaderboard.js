@@ -1,20 +1,16 @@
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { setSelectedMember } from "../store/slices/selectionSlice";
-import { POLITICAL_ICONS } from "../data/politicalIcons";
+import {
+	selectSortedCouncilPersonsByWins,
+	selectSelectedMemberId,
+} from "../store/selectors";
 import "./Leaderboard.css";
 
 const Leaderboard = () => {
 	const dispatch = useDispatch();
-	const councilPersons = useSelector((state) => state.councilPerson.list);
-	const selectedMemberId = useSelector(
-		(state) => state.selection.selectedMemberId
-	);
-
-	// Sort council persons by wins (descending)
-	const sortedMembers = [...councilPersons].sort(
-		(a, b) => (b.wins || 0) - (a.wins || 0)
-	);
+	const sortedMembers = useSelector(selectSortedCouncilPersonsByWins);
+	const selectedMemberId = useSelector(selectSelectedMemberId);
 
 	const handleMemberClick = (memberId) => {
 		dispatch(
@@ -24,37 +20,39 @@ const Leaderboard = () => {
 
 	return (
 		<div className="leaderboard">
-			<h2>Council Leaderboard</h2>
-			<div className="leaderboard-list">
-				{sortedMembers.map((member) => (
-					<div
-						key={member.id}
-						className={`leaderboard-item ${
-							member.id === selectedMemberId ? "selected" : ""
-						}`}
-						onClick={() => handleMemberClick(member.id)}
-					>
-						<div className="member-info">
-							<span className="member-avatar">
-								{POLITICAL_ICONS.find((icon) => icon.id === member.avatarId)
-									?.symbol || "👤"}
-							</span>
-							<div className="member-details">
-								<span className="member-name">{member.name}</span>
-								<span
-									className="member-party"
-									style={{ color: member.party.toLowerCase() }}
-								>
-									{member.party}
-								</span>
-							</div>
-						</div>
-						<div className="member-stats">
-							<span className="wins-count">Wins: {member.wins || 0}</span>
-						</div>
-					</div>
-				))}
-			</div>
+			<h2>Leaderboard</h2>
+			{sortedMembers.length === 0 ? (
+				<div className="no-members">No council members yet</div>
+			) : (
+				<table className="leaderboard-table">
+					<thead>
+						<tr>
+							<th>Rank</th>
+							<th>Name</th>
+							<th>Party</th>
+							<th>Wins</th>
+						</tr>
+					</thead>
+					<tbody>
+						{sortedMembers.map((member, index) => (
+							<tr
+								key={member.id}
+								onClick={() => handleMemberClick(member.id)}
+								style={{
+									cursor: "pointer",
+									backgroundColor:
+										member.id === selectedMemberId ? "#f0f0f0" : "transparent",
+								}}
+							>
+								<td className="rank">{index + 1}</td>
+								<td>{member.name}</td>
+								<td>{member.party}</td>
+								<td>{member.wins || 0}</td>
+							</tr>
+						))}
+					</tbody>
+				</table>
+			)}
 		</div>
 	);
 };
